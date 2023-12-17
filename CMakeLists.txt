@@ -1,0 +1,36 @@
+﻿# CMakeList.txt : CMake project for Test, include source and define
+# project specific logic here.
+#
+cmake_minimum_required (VERSION 3.20)
+
+project ("Test" C)
+
+# Set Execution to bin folder
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+
+#Get libary
+include(FetchContent)
+Set(FETCHCONTENT_QUIET FALSE)
+
+FetchContent_Declare(
+        SDL2
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG release-2.26.3
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(SDL2)
+include_directories(${SDL2_SOURCE_DIR}/include)
+
+
+
+
+# Add source to this project's executable.
+add_executable (Test "src/main.c" "src/mesh.h" "src/mesh.c")
+
+
+target_link_libraries(Test SDL2::SDL2main SDL2::SDL2-static)
+# TODO: Add tests and install targets if needed.
+
+
