@@ -15,7 +15,7 @@ SDL_Texture* color_buffer_texture = NULL;
 
 
 int window_width = 800;
-int window_height = 800;
+int window_height = 600;
 
 /* Setting up functions */
 bool initialize_window(void){
@@ -68,10 +68,14 @@ switch(event.type){
      is_running = false;
      break;
     case SDL_KEYDOWN:
+    if(event.key.keysym.sym == SDLK_4){
+        //Smiley_face();
+    }
     if(event.key.keysym.sym == SDLK_ESCAPE){
         is_running = false;
     }
     break;
+
 }
 }
 
@@ -80,14 +84,26 @@ void update(void){
 }
 
 void draw_grid(void){
-for(int y = 0; y < window_height; y++){
-    for(int x = 0; x < window_width; x++){
-        if(y % 10 == 0 || x % 10 == 0){
-color_buffer[(window_width * y) + x] =  0xFF000000;
-        }
+for(int y = 0; y < window_height; y+= 10){
+    for(int x = 0; x < window_width; x+= 10){
+      
+color_buffer[(window_width * y) + x] =  0xFF444444;
+        
     }
 }
 }
+
+void draw_rect(int x, int y, int width, int height, uint32_t color) {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            int current_x = x + i;
+            int current_y = y + j;
+            color_buffer[(window_width * current_y) + current_x] = color;
+        }
+    }
+}
+    
+
 void render_color_buffer(void) {
     SDL_UpdateTexture(
         color_buffer_texture,
@@ -111,9 +127,15 @@ void render(void) {
     SDL_SetRenderDrawColor(renderer, 0,0,0,255);
     SDL_RenderClear(renderer);
 
+draw_grid();
+draw_rect(300, 200, 300, 150, 0xFFFF00FF);
+
+
     render_color_buffer();
-    clear_color_buffer(0xFFFFFFFF);
-    draw_grid();
+    clear_color_buffer(0xFF000000);
+
+
+      
     SDL_RenderPresent(renderer);
 }
 
