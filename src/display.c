@@ -54,6 +54,14 @@ color_buffer[(window_width * y) + x] =  0xFF444444;
 }
 }
 
+void smiley_face(int x, int y,int length,uint32_t color) {
+    for (int i = 0; i < length; i++) {
+        int current_x = x + i;
+        color_buffer[(window_width * y) + current_x] = color;
+    }
+}
+
+
 void draw_rect(int x, int y, int width, int height, uint32_t color) {
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {

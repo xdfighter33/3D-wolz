@@ -55,7 +55,8 @@ void render(void) {
     SDL_RenderClear(renderer);
 
 draw_grid();
-draw_rect(300, 200, 300, 150, 0xFFFF00FF);
+smiley_face(400, 300, 100, 0xFFFF00FF);
+//draw_rect(300, 200, 300, 150, 0xFFFF00FF);
 
 
     render_color_buffer();
