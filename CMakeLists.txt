@@ -27,7 +27,7 @@ include_directories(${SDL2_SOURCE_DIR}/include)
 
 
 # Add source to this project's executable.
-add_executable (Test "src/main.c" "src/mesh.h" "src/mesh.c")
+add_executable (Test "src/main.c" "src/mesh.h" "src/mesh.c" "src/display.h" "src/display.c")
 
 
 target_link_libraries(Test SDL2::SDL2main SDL2::SDL2-static)
