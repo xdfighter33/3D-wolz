@@ -5,6 +5,16 @@
 #include "display.h"
 #include "vector.h"
 /* Declare Variables */
+
+float fov_angle = 640;
+// enum { N_points = 9 * 9 * 9 };
+
+#define N_points (9 * 9 * 9)
+
+
+vec3_t cube_points[N_points]; // 
+vec2_t projected_points[N_points];
+vec3_t camera_pos = { .x = 0, .y = 0, .z = -5 };
 bool is_running = false;
 
 
@@ -22,7 +32,20 @@ void setup(void){
         window_height
     );
 
-}
+    int point_count = 0;
+
+    for (float x = -1; x <=1; x += 0.25){
+        for (float y = -1; y <= 1; y += 0.25) {
+            for(float z = -1; y <= 1; y += 0.25) {
+                vec3_t new_point = { .x = x, .y = y, .z = z };
+                cube_points[point_count++] = new_point;
+            }
+        }
+
+        }
+    
+    }
+
 
 /* Game Loop */
 void process_input(void){
@@ -45,19 +68,50 @@ switch(event.type){
 }
 }
 
+
+vec2_t project(vec3_t point) {
+    vec2_t projected_point = {
+    .x = (fov_angle * point.x ) / point.z,
+    .y = (fov_angle * point.y ) / point.z
+    };
+    return projected_point;
+}
+
 void update(void){
-// To-do
+    for (int i = 0; i < N_points; i++)
+    {
+        vec3_t point = cube_points[i];
+
+
+        point.z -= camera_pos.z;
+
+        /* Projecting poitns */
+        vec2_t projected_point = project(point);
+
+
+        projected_points[i] = projected_point;
+    }
 }
 
 
 void render(void) {
-    SDL_SetRenderDrawColor(renderer, 0,0,0,255);
-    SDL_RenderClear(renderer);
 
-draw_grid();
-smiley_face(400, 300, 400, 0xFFFF00FF);
-draw_rect(300, 200, 300, 150, 0xFFFF00FF);
 
+//draw_grid();
+// draw_line(400, 300, 400, 0xFFFF00FF);
+//draw_rect(300, 200, 300, 150, 0xFFFF00FF);
+
+for (int i = 0; i < N_points; i++) {
+    vec2_t projected_point = projected_points[i];
+
+    draw_rect(
+        projected_point.x + (window_width / 2),
+        projected_point.y + (window_height / 2),
+        4,
+        4,
+        0xFFFF00FF);
+
+}
 
     render_color_buffer();
     clear_color_buffer(0xFF000000);
@@ -69,7 +123,6 @@ draw_rect(300, 200, 300, 150, 0xFFFF00FF);
 
 int main(void){
 is_running = initialize_window();
-vec3_t vector = {2.0,1.0,1.0};
 setup();
 
 while (is_running){
