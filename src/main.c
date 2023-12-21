@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "display.h"
-
+#include "vector.h"
 /* Declare Variables */
 bool is_running = false;
 
@@ -55,8 +55,8 @@ void render(void) {
     SDL_RenderClear(renderer);
 
 draw_grid();
-smiley_face(400, 300, 100, 0xFFFF00FF);
-//draw_rect(300, 200, 300, 150, 0xFFFF00FF);
+smiley_face(400, 300, 400, 0xFFFF00FF);
+draw_rect(300, 200, 300, 150, 0xFFFF00FF);
 
 
     render_color_buffer();
@@ -69,7 +69,7 @@ smiley_face(400, 300, 100, 0xFFFF00FF);
 
 int main(void){
 is_running = initialize_window();
-
+vec3_t vector = {2.0,1.0,1.0};
 setup();
 
 while (is_running){

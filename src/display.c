@@ -1,6 +1,5 @@
 ﻿#include "display.h"
 
-
 /* Declare Variables */
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
