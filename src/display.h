@@ -26,7 +26,10 @@ extern void draw_grid(void);
 
 extern void draw_rect(int x, int y, int width, int height, uint32_t color);
 
-extern void smiley_face();
+extern void draw_line();
+
+extern void draw_pixel(int x, int y, uint32_t color);
+
 
 extern void render_color_buffer(void);
 
