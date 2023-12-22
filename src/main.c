@@ -6,18 +6,26 @@
 #include "vector.h"
 /* Declare Variables */
 
-float fov_angle = 640;
-int PREVIOUS_FRAME_TIME = 0;
+
+
+
+
 // enum { N_points = 9 * 9 * 9 };
 
-#define N_points (9 * 9 * 9)
+//#define N_points (9 * 9 * 9)
 
 
-vec3_t cube_points[N_points]; // 
-vec2_t projected_points[N_points];
+//vec3_t cube_points[N_points]; /
+//vec2_t projected_points[N_points];
+#define N_MESH_VERTICES 8
+vec3_t mesh_vertices[N_MESH_VERTICES] = {
+    {.x = -1, }
+};
 vec3_t camera_pos = { .x = 0, .y = 0, .z = -5 };
 vec3_t cube_rotation = {.x = 0 ,.y = 0,.z = 0};
+float fov_factor = 640;
 bool is_running = false;
+int PREVIOUS_FRAME_TIME = 0;
 
 
 
@@ -34,16 +42,7 @@ void setup(void){
         window_height
     );
 
-    int point_count = 0;
 
-    for (float x = -1; x <= 1; x += 0.25) {
-        for (float y = -1; y <= 1; y += 0.25) {
-            for (float z = -1; z <= 1; z += 0.25) {
-                vec3_t new_point = { .x = x, .y = y, .z = z };
-                cube_points[point_count++] = new_point;
-            }
-        }
-    }
 
     
     }
@@ -73,8 +72,8 @@ switch(event.type){
 
 vec2_t project(vec3_t point) {
     vec2_t projected_point = {
-    .x = (fov_angle * point.x ) / point.z,
-    .y = (fov_angle * point.y ) / point.z
+    .x = (fov_factor * point.x ) / point.z,
+    .y = (fov_factor * point.y ) / point.z
     };
     return projected_point;
 }
@@ -91,7 +90,8 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
     cube_rotation.x += .01;
     cube_rotation.y += .01;
     cube_rotation.z += .01;
-    for (int i = 0; i < N_points; i++)
+   
+   /* for (int i = 0; i < N_points; i++)
     {
         vec3_t point = cube_points[i];
 
@@ -102,7 +102,7 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
 
         rotated_cube.z -= camera_pos.z;
 
-        /* Projecting poitns */
+        /* Projecting poitns ////*
         vec2_t projected_point = project(rotated_cube);
 
 
@@ -110,6 +110,7 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
 
 
     }
+    /*/
 }
 
 
@@ -119,7 +120,7 @@ void render(void) {
 //draw_grid();
 // draw_line(400, 300, 400, 0xFFFF00FF);
 //draw_rect(300, 200, 300, 150, 0xFFFF00FF);
-
+/*
 for (int i = 0; i < N_points; i++) {
     vec2_t projected_point = projected_points[i];
        /* vec2_t point1 = projected_points[i];
@@ -128,15 +129,16 @@ for (int i = 0; i < N_points; i++) {
         float start_x = point1.x + (window_width / 2);
         float start_y = point1.y + (window_height / 2);
         float line_length = (float)(point2.x - point1.x);
-*/
+/*
     draw_rect(
         projected_point.x + (window_width / 2),
         projected_point.y + (window_height / 2),
         4,
         4,
         0xFFFF00FF);
-
 }
+*/
+
 
     render_color_buffer();
     clear_color_buffer(0xFF000000);
