@@ -1,5 +1,5 @@
 #pragma once
-
+#include <SDL.h>
 typedef struct{
     float x;
     float y;
@@ -11,7 +11,9 @@ typedef struct{
     float z;
 }vec3_t;
 
-
+vec3_t vec3_rotate_x(vec3_t v, float angle);
+vec3_t vec3_rotate_y(vec3_t v, float angle);
+vec3_t vec3_rotate_z(vec3_t v, float angle);
 
 
 /* Add Vector Math */

@@ -5,7 +5,8 @@
 #pragma once 
 #ifndef DISPLAY_H 
 #define DISPLAY_HG
-
+#define FPS 30
+#define FRAME_TIME_TARGET (1000/ FPS)
 
 
 extern SDL_Window* window;
