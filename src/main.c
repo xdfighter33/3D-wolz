@@ -23,7 +23,7 @@ vec2_t projected_points[N_points];
 triangle_t* triangles_to_render = NULL;
 
 vec3_t camera_pos = { .x = 0, .y = 0.75, .z = 0.5 };
-float fov_factor = 200;
+float fov_factor = 20;
 bool is_running = false;
 int PREVIOUS_FRAME_TIME = 0;
 
@@ -41,7 +41,8 @@ void setup(void){
         window_height
     );
    
-    load_obj_file_datas(ASSET_DIR "/f22.obj");
+    load_obj_file_datas(ASSET_DIR "/cube.obj");
+    // load_pyramid_mesh_data();
     }
 
 
@@ -223,13 +224,13 @@ int main(void){
 is_running = initialize_window();
 setup();
 
-/*
+
 while (is_running){
     process_input();
     update();
     render();
 }
-*/
+
 
 
 destroy_window();
