@@ -22,8 +22,8 @@ vec2_t projected_points[N_points];
 
 triangle_t* triangles_to_render = NULL;
 
-vec3_t camera_pos = { .x = 0, .y = 0.75, .z = 0.5 };
-float fov_factor = 20;
+vec3_t camera_pos = { .x = 0, .y = 0, .z = 5 };
+float fov_factor = 320;
 bool is_running = false;
 int PREVIOUS_FRAME_TIME = 0;
 
@@ -41,7 +41,7 @@ void setup(void){
         window_height
     );
    
-    load_obj_file_datas(ASSET_DIR "/cube.obj");
+    load_obj_file_datas(ASSET_DIR "/f22.obj");
     // load_pyramid_mesh_data();
     }
 
@@ -88,9 +88,9 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
     triangles_to_render = NULL;
     ///* MESH ROTATION SPEED *\\\\\\\/
     //
-    // mesh.rotation.x += 0.01;
-    //mesh.rotation.y += 0.01;
-    mesh.rotation.z += 0.01;
+     mesh.rotation.x += 0.1;
+    mesh.rotation.y += 0.00;
+    mesh.rotation.z += 0.00;
 
     // Loop thhrough triangles faces of our mesh
     int num_faces = array_length(mesh.faces);
@@ -184,9 +184,9 @@ int num_triangles = array_length(triangles_to_render);
 
     for (int i = 0; i < num_triangles; i++) {
         triangle_t triangle = triangles_to_render[i];
-        draw_rect(triangle.points[0].x, triangle.points[0].y, 3, 3, 0xFFFF00FF);
-         draw_rect(triangle.points[1].x, triangle.points[1].y, 3, 3, 0xFFFF00FF);
-        draw_rect(triangle.points[2].x, triangle.points[2].y, 3, 3, 0xFFFF00FF);
+        draw_rect(triangle.points[0].x, triangle.points[0].y, 3, 3, 0x0000FF00);
+         draw_rect(triangle.points[1].x, triangle.points[1].y, 3, 3, 0x0000FF00);
+        draw_rect(triangle.points[2].x, triangle.points[2].y, 3, 3, 0x0000FF00);
         draw_triangle(
             triangle.points[0].x,
             triangle.points[0].y,
@@ -194,7 +194,7 @@ int num_triangles = array_length(triangles_to_render);
             triangle.points[1].y,
             triangle.points[2].x,
             triangle.points[2].y,
-            0xFFFF00FF
+            0xFFFFFFFF
         );
         //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, 0xFFFF00FF);
         //draw_line(triangle.points[1].x, triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF00FF);

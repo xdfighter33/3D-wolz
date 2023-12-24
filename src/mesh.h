@@ -28,6 +28,5 @@ extern mesh_t mesh;
 
 void load_cube_mesh_data(void);
 void load_pyramid_mesh_data(void);
-
-void load_obj_file_datas(const char* filename);
+void load_obj_file_datas(char* filename);
 // TODO: Reference additional headers your program requires here.
