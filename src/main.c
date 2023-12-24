@@ -22,8 +22,8 @@ vec2_t projected_points[N_points];
 
 triangle_t* triangles_to_render = NULL;
 
-vec3_t camera_pos = { .x = 0, .y = 0, .z = 5 };
-float fov_factor = 320;
+vec3_t camera_pos = { 0,0,0};
+float fov_factor = 640;
 bool is_running = false;
 int PREVIOUS_FRAME_TIME = 0;
 
@@ -88,7 +88,7 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
     triangles_to_render = NULL;
     ///* MESH ROTATION SPEED *\\\\\\\/
     //
-     mesh.rotation.x += 0.1;
+     mesh.rotation.x += 0.01;
     mesh.rotation.y += 0.00;
     mesh.rotation.z += 0.00;
 
@@ -101,7 +101,9 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
         face_vertices[0] = mesh.vertices[mesh_face.a - 1];
         face_vertices[1] = mesh.vertices[mesh_face.b - 1];
         face_vertices[2] = mesh.vertices[mesh_face.c - 1];
-        triangle_t projected_triangle;
+
+
+        vec3_t transformed_vertices[3];
         // Loop through vertices and Transform
 
         for (int j = 0; j < 3; j++) {
@@ -114,10 +116,37 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
 
             //Translate away from the camera
 
-            transformed_vertex.z -= camera_pos.z;
-            transformed_vertex.x -= camera_pos.x;
-            transformed_vertex.y -= camera_pos.y;
-            vec2_t projected_point = project(transformed_vertex);
+            transformed_vertex.z += 5;
+            // transformed_vertex.x
+
+
+            transformed_vertices[j] = transformed_vertex;
+        }
+
+        //BACKFACE CULLING ALGO  (CLOCK WISE)
+            vec3_t vector_a = transformed_vertices[0];
+            vec3_t vector_b = transformed_vertices[1];
+            vec3_t vector_c = transformed_vertices[2];
+
+            vec3_t vector_ab = vec_3_subtraction(vector_b,vector_a);
+            vec3_t vector_ac = vec_3_subtraction(vector_c,vector_a);
+
+
+            vec3_t normal = vec_3_cross(vector_ab, vector_ac);
+
+        // FIND CAMERA POSITIOn
+        vec3_t camera_ray = vec_3_subtraction(camera_pos,vector_a);
+
+
+        float dot_normal_camera = vec_3_dot(normal,camera_ray);
+
+        if (dot_normal_camera > 0){
+            continue;
+        }
+        triangle_t projected_triangle;
+
+        for (int j = 0; j < 3; j++){
+            vec2_t projected_point = project(transformed_vertices[j]);
 
 
             projected_point.x += (window_width / 2);
