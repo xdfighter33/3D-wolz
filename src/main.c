@@ -6,9 +6,8 @@
 #include "vector.h"
 #include "mesh.h"
 #include "array.h"
+
 /* Declare Variables */
-
-
 
 
 
@@ -23,11 +22,10 @@ vec2_t projected_points[N_points];
 
 triangle_t* triangles_to_render = NULL;
 
-vec3_t camera_pos = { .x = 0, .y = 0, .z = -5 };
-float fov_factor = 640;
+vec3_t camera_pos = { .x = 0, .y = 0.75, .z = 0.5 };
+float fov_factor = 200;
 bool is_running = false;
 int PREVIOUS_FRAME_TIME = 0;
-
 
 
 
@@ -42,10 +40,8 @@ void setup(void){
         window_width,
         window_height
     );
-
-    //load_cube_mesh_data();
-    load_pyramid_mesh_data();
-    
+   
+    load_obj_file_datas(ASSET_DIR "/f22.obj");
     }
 
 
@@ -90,8 +86,9 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
 
     triangles_to_render = NULL;
     ///* MESH ROTATION SPEED *\\\\\\\/
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.01;
+    //
+    // mesh.rotation.x += 0.01;
+    //mesh.rotation.y += 0.01;
     mesh.rotation.z += 0.01;
 
     // Loop thhrough triangles faces of our mesh
@@ -117,6 +114,8 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
             //Translate away from the camera
 
             transformed_vertex.z -= camera_pos.z;
+            transformed_vertex.x -= camera_pos.x;
+            transformed_vertex.y -= camera_pos.y;
             vec2_t projected_point = project(transformed_vertex);
 
 
@@ -224,11 +223,14 @@ int main(void){
 is_running = initialize_window();
 setup();
 
+/*
 while (is_running){
     process_input();
     update();
     render();
 }
+*/
+
 
 destroy_window();
 free_data(); // CLEAR UP MEMMORY OF THE ARRAY 

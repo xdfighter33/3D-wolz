@@ -57,6 +57,7 @@ face_t cube_faces[N_CUBE_FACES] = {
 
 };
 
+
 face_t pyramid_faces[N_PYRAMID_FACES] = {
 	{.a = 1, .b = 2, .c = 5},
 
@@ -90,3 +91,26 @@ void load_pyramid_mesh_data(void) {
 		array_push(mesh.faces, pyramid_face);
 	}
 }
+
+
+
+void load_obj_file_datas(const char* file_name) {
+	FILE* file;
+	file = fopen(file_name, "r");
+
+
+	char line[1024];
+	if (file != NULL) {
+		printf("Opened model1.obj!\n");
+		while (fgets(line, 1024, file)) {
+			printf("LINE=%s", line);
+		}
+		// fclose(file);
+	}
+	else {
+		perror("Unable to open cube.obj");
+	}
+
+	return 0;
+}
+
