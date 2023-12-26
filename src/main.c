@@ -6,6 +6,7 @@
 #include "vector.h"
 #include "mesh.h"
 #include "array.h"
+#include "triangle.h"
 
 /* Declare Variables */
 
@@ -89,8 +90,8 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
     ///* MESH ROTATION SPEED *\\\\\\\/
     //
      mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.00;
-    mesh.rotation.z += 0.00;
+    // mesh.rotation.y += 0.01;
+    // mesh.rotation.z += 0.02;
 
     // Loop thhrough triangles faces of our mesh
     int num_faces = array_length(mesh.faces);
@@ -130,17 +131,20 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
 
             vec3_t vector_ab = vec_3_subtraction(vector_b,vector_a);
             vec3_t vector_ac = vec_3_subtraction(vector_c,vector_a);
+            vec_3_normalize(&vector_ab);
+            vec_3_normalize(&vector_ac);
 
 
             vec3_t normal = vec_3_cross(vector_ab, vector_ac);
 
+            vec_3_normalize(&normal);
         // FIND CAMERA POSITIOn
         vec3_t camera_ray = vec_3_subtraction(camera_pos,vector_a);
 
 
         float dot_normal_camera = vec_3_dot(normal,camera_ray);
 
-        if (dot_normal_camera > 0){
+        if (dot_normal_camera < 0){
             continue;
         }
         triangle_t projected_triangle;
@@ -208,14 +212,14 @@ for (int i = 0; i < N_points; i++) {
 }
 */
 
-
+/*
 int num_triangles = array_length(triangles_to_render);
 
     for (int i = 0; i < num_triangles; i++) {
         triangle_t triangle = triangles_to_render[i];
-        draw_rect(triangle.points[0].x, triangle.points[0].y, 3, 3, 0x0000FF00);
-         draw_rect(triangle.points[1].x, triangle.points[1].y, 3, 3, 0x0000FF00);
-        draw_rect(triangle.points[2].x, triangle.points[2].y, 3, 3, 0x0000FF00);
+        //draw_rect(triangle.points[0].x, triangle.points[0].y, 3, 3, 0x0000FF00);
+         //draw_rect(triangle.points[1].x, triangle.points[1].y, 3, 3, 0x0000FF00);
+        //draw_rect(triangle.points[2].x, triangle.points[2].y, 3, 3, 0x0000FF00);
         draw_triangle(
             triangle.points[0].x,
             triangle.points[0].y,
@@ -231,7 +235,9 @@ int num_triangles = array_length(triangles_to_render);
         //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF00FF);
 
     }
+    */
 
+draw_filled_traingle(300, 100, 50, 400, 500, 700, 0xFFFF00FF);
     //FREE MEMORY (ARRAY)
     array_free(triangles_to_render);
 
