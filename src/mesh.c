@@ -97,9 +97,9 @@ void load_pyramid_mesh_data(void) {
 void load_obj_file_datas(char* filename) {
     FILE* file;
     file = fopen(filename, "r");
-    char line[1024];
+    char line[10024];
 
-    while (fgets(line, 1024, file)) {
+    while (fgets(line, 10024, file)) {
         // Vertex information
         if (strncmp(line, "v ", 2) == 0) {
             vec3_t vertex;
