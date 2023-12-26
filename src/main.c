@@ -31,18 +31,22 @@ int PREVIOUS_FRAME_TIME = 0;
 
 
 void setup(void){
+
+    render_method = render_wire;
+    cull_method = CULL_BACKFACE;
+
     //Allocating Memory for buffer 
     color_buffer = (uint32_t*) malloc(sizeof(uint32_t) * window_width * window_height);
     // Allocating memory for textures
     color_buffer_texture = SDL_CreateTexture(
         renderer,
-        SDL_PIXELFORMAT_ABGR8888,
+        SDL_PIXELFORMAT_ARGB8888,
         SDL_TEXTUREACCESS_STREAMING,
         window_width,
         window_height
     );
-   
-    load_obj_file_datas(ASSET_DIR "/f22.obj");
+    load_cube_mesh_data();
+    //load_obj_file_datas(ASSET_DIR "/cube.obj");
     // load_pyramid_mesh_data();
     }
 
@@ -90,8 +94,8 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
     ///* MESH ROTATION SPEED *\\\\\\\/
     //
      mesh.rotation.x += 0.01;
-    // mesh.rotation.y += 0.01;
-    // mesh.rotation.z += 0.02;
+     mesh.rotation.y += 0.01;
+     mesh.rotation.z += 0.02;
 
     // Loop thhrough triangles faces of our mesh
     int num_faces = array_length(mesh.faces);
@@ -124,13 +128,15 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
             transformed_vertices[j] = transformed_vertex;
         }
 
+
         //BACKFACE CULLING ALGO  (CLOCK WISE)
+        if (cull_method == CULL_BACKFACE) {
             vec3_t vector_a = transformed_vertices[0];
             vec3_t vector_b = transformed_vertices[1];
             vec3_t vector_c = transformed_vertices[2];
 
-            vec3_t vector_ab = vec_3_subtraction(vector_b,vector_a);
-            vec3_t vector_ac = vec_3_subtraction(vector_c,vector_a);
+            vec3_t vector_ab = vec_3_subtraction(vector_b, vector_a);
+            vec3_t vector_ac = vec_3_subtraction(vector_c, vector_a);
             vec_3_normalize(&vector_ab);
             vec_3_normalize(&vector_ac);
 
@@ -138,27 +144,37 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
             vec3_t normal = vec_3_cross(vector_ab, vector_ac);
 
             vec_3_normalize(&normal);
-        // FIND CAMERA POSITIOn
-        vec3_t camera_ray = vec_3_subtraction(camera_pos,vector_a);
 
 
-        float dot_normal_camera = vec_3_dot(normal,camera_ray);
+            // FIND CAMERA POSITIOn
+            vec3_t camera_ray = vec_3_subtraction(camera_pos, vector_a);
 
-        if (dot_normal_camera < 0){
-            continue;
+
+            float dot_normal_camera = vec_3_dot(normal, camera_ray);
+
+            if (dot_normal_camera < 0) {
+                continue;
+            }
         }
-        triangle_t projected_triangle;
+        //triangle_t projected_triangle;
 
+        vec2_t projected_point[3];
         for (int j = 0; j < 3; j++){
-            vec2_t projected_point = project(transformed_vertices[j]);
+             projected_point[j] = project(transformed_vertices[j]);
 
 
-            projected_point.x += (window_width / 2);
-            projected_point.y += (window_height / 2);
+            projected_point[j].x += (window_width / 2);
+            projected_point[j].y += (window_height / 2);
 
-            projected_triangle.points[j] = projected_point;
         }
-
+        triangle_t projected_triangle = {
+            .points = {
+                projected_point[0].x, projected_point[0].y,
+                projected_point[1].x, projected_point[1].y,
+                projected_point[2].x, projected_point[2].y
+                },
+           .color = mesh_face.color
+        };
         //Save to Projected Triange
         //triangles_to_render[i] = projected_triangle;
 
@@ -212,7 +228,7 @@ for (int i = 0; i < N_points; i++) {
 }
 */
 
-/*
+
 int num_triangles = array_length(triangles_to_render);
 
     for (int i = 0; i < num_triangles; i++) {
@@ -220,6 +236,16 @@ int num_triangles = array_length(triangles_to_render);
         //draw_rect(triangle.points[0].x, triangle.points[0].y, 3, 3, 0x0000FF00);
          //draw_rect(triangle.points[1].x, triangle.points[1].y, 3, 3, 0x0000FF00);
         //draw_rect(triangle.points[2].x, triangle.points[2].y, 3, 3, 0x0000FF00);
+        draw_filled_triangle(
+            triangle.points[0].x,
+            triangle.points[0].y,
+            triangle.points[1].x,
+            triangle.points[1].y,
+            triangle.points[2].x,
+            triangle.points[2].y,
+            triangle.color
+        );
+        
         draw_triangle(
             triangle.points[0].x,
             triangle.points[0].y,
@@ -227,7 +253,7 @@ int num_triangles = array_length(triangles_to_render);
             triangle.points[1].y,
             triangle.points[2].x,
             triangle.points[2].y,
-            0xFFFFFFFF
+            triangle.color
         );
         //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, 0xFFFF00FF);
         //draw_line(triangle.points[1].x, triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF00FF);
@@ -235,9 +261,8 @@ int num_triangles = array_length(triangles_to_render);
         //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF00FF);
 
     }
-    */
+    
 
-draw_filled_traingle(300, 100, 50, 400, 500, 700, 0xFFFF00FF);
     //FREE MEMORY (ARRAY)
     array_free(triangles_to_render);
 
