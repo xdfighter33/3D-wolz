@@ -1,6 +1,6 @@
 #include <math.h>
 #include "vector.h"
-
+#include <stdlib.h>
 float vec_2_legth(vec2_t v){
     return sqrtf(v.x * v.x) + (v.y * v.y);
 }
@@ -54,7 +54,7 @@ void vec_2_normalize(vec2_t* v) {
 //// VEC 3 ///////
  
 float vec_3_legth(vec3_t v){
-    return sqrtf(v.x * v.x + v.y * v.y + v.z *v.z * v.z);
+    return sqrtf(v.x * v.x + v.y * v.y + v.z *v.z );
 }
 
 
@@ -106,10 +106,13 @@ vec3_t vec_3_cross(vec3_t a, vec3_t b) {
 }
 
 void vec_3_normalize(vec3_t* v) {
-    float length = vec_3_legth(*v);
-    v->x /= length;
-    v->y /= length;
-    v->z /= length;
+    float length1 = vec_3_legth(*v);
+    //float length = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
+    v->x /= length1;
+    v->y /= length1;
+    v->z /= length1;
+
+
 }
 float vec_3_dot(vec3_t a, vec3_t b){
     return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
