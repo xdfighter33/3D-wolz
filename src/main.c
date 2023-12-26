@@ -45,8 +45,8 @@ void setup(void){
         window_width,
         window_height
     );
-    load_cube_mesh_data();
-    //load_obj_file_datas(ASSET_DIR "/cube.obj");
+    //load_cube_mesh_data();
+    load_obj_file_datas(ASSET_DIR "/f22.obj");
     // load_pyramid_mesh_data();
     }
 
@@ -61,12 +61,35 @@ switch(event.type){
      is_running = false;
      break;
     case SDL_KEYDOWN:
+    if(event.key.keysym.sym == SDLK_1){
+        render_method = RENDER_WIRE_VERRTEX;
+    }
+    if(event.key.keysym.sym == SDLK_2){
+        render_method = render_wire;
+    }
+    if(event.key.keysym.sym == SDLK_3){
+        render_method = RENDER_FILL_TRIANGLE;
+    }
+
     if(event.key.keysym.sym == SDLK_4){
-        //Smiley_face();
+     //
+     render_method = RENDER_FILL_TRIANGLE_WIRE;
+     
+    }
+    if(event.key.keysym.sym == SDLK_c){
+     //
+     cull_method = CULL_BACKFACE;
+     
+    }
+    if(event.key.keysym.sym == SDLK_d){
+     //
+     cull_method = CULL_NONE;
+     
     }
     if(event.key.keysym.sym == SDLK_ESCAPE){
         is_running = false;
     }
+
     break;
 
 }
@@ -204,7 +227,7 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
 
 
 void render(void) {
-
+SDL_RenderClear(renderer);
 
 draw_grid();
 // draw_line(400, 300, 400, 0xFFFF00FF);
@@ -227,12 +250,12 @@ for (int i = 0; i < N_points; i++) {
         0xFFFF00FF);
 }
 */
-
-
 int num_triangles = array_length(triangles_to_render);
-
     for (int i = 0; i < num_triangles; i++) {
         triangle_t triangle = triangles_to_render[i];
+    if(render_method == RENDER_FILL_TRIANGLE || render_method == RENDER_FILL_TRIANGLE_WIRE ){
+
+    
         //draw_rect(triangle.points[0].x, triangle.points[0].y, 3, 3, 0x0000FF00);
          //draw_rect(triangle.points[1].x, triangle.points[1].y, 3, 3, 0x0000FF00);
         //draw_rect(triangle.points[2].x, triangle.points[2].y, 3, 3, 0x0000FF00);
@@ -243,25 +266,40 @@ int num_triangles = array_length(triangles_to_render);
             triangle.points[1].y,
             triangle.points[2].x,
             triangle.points[2].y,
-            triangle.color
+            BLUE
         );
-        
+    }
+        if (render_method == render_wire || render_method == RENDER_WIRE_VERRTEX || render_method == RENDER_FILL_TRIANGLE_WIRE){
+                
         draw_triangle(
-            triangle.points[0].x,
-            triangle.points[0].y,
-            triangle.points[1].x,
-            triangle.points[1].y,
-            triangle.points[2].x,
-            triangle.points[2].y,
-            triangle.color
-        );
+            triangle.points[0].x, triangle.points[0].y,
+            triangle.points[1].x, triangle.points[1].y,
+            triangle.points[2].x, triangle.points[2].y,
+            WHITE
+                );
+        }
+            if(render_method == RENDER_WIRE_VERRTEX){
+             draw_rect(triangle.points[0].x , triangle.points[0].y, 6, 6, RED);
+             draw_rect(triangle.points[1].x , triangle.points[1].y , 6, 6, RED);
+             draw_rect(triangle.points[2].x ,  triangle.points[2].y , 6, 6, RED);
+            }
+
+        //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, RED);
+        //draw_line(triangle.points[1].x, triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, RED);
+        //draw_line(triangle.points[2].x, triangle.points[2].y, triangle.points[0].x, triangle.points[0].y, RED);
+        //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[2].x, triangle.points[2].y, RED);
+        
+    }
+    
         //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, 0xFFFF00FF);
         //draw_line(triangle.points[1].x, triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF00FF);
         //draw_line(triangle.points[2].x, triangle.points[2].y, triangle.points[0].x, triangle.points[0].y, 0xFFFF00FF);
         //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF00FF);
 
-    }
     
+
+
+
 
     //FREE MEMORY (ARRAY)
     array_free(triangles_to_render);
