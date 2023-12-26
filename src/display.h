@@ -7,16 +7,25 @@
 #define DISPLAY_HG
 #define FPS 30
 #define FRAME_TIME_TARGET (1000/ FPS)
+#define RED 0xFFFF0000
+#define BLUE 0xFF0000FF
+#define GREEN 0xFF00FF00 
+#define WHITE 0xFFFFFFFF
+#define BLACK 0xFF000000
+#define ORANGE 0xFFFFA500
 
-/*enum colors {
-	RED,
-	GREEN,
-	BLUE,
-	WHITE,
-	BLACK
-};
-ADDD HASHMAP TO PROGRAM
-*/
+
+enum cull_method {
+	CULL_NONE,
+	CULL_BACKFACE
+} cull_method;
+
+enum render_method {
+	render_wire,
+	RENDER_WIRE_VERRTEX,
+	RENDER_FILL_TRIANGLE,
+	RENDER_FILL_TRIANGLE_WIRE
+} render_method ;
 extern SDL_Window* window;
 extern SDL_Renderer* renderer;
 
@@ -31,6 +40,7 @@ extern int window_height;
 extern bool initialize_window(void);
 
 
+extern const uint32_t color(int x);
 extern void draw_grid(void);
 
 extern void draw_rect(int x, int y, int width, int height, uint32_t color);

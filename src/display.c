@@ -42,7 +42,6 @@ return true;
 
 
 
-
 void draw_grid(void){
 for(int y = 0; y < window_height; y+= 10){
     for(int x = 0; x < window_width; x+= 10){
