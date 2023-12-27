@@ -46,7 +46,7 @@ void setup(void){
         window_height
     );
     //load_cube_mesh_data();
-    load_obj_file_datas(ASSET_DIR "/f22.obj");
+    load_obj_file_datas(ASSET_DIR "/cube.obj");
     // load_pyramid_mesh_data();
     }
 
@@ -89,6 +89,12 @@ switch(event.type){
     if(event.key.keysym.sym == SDLK_ESCAPE){
         is_running = false;
     }
+    if(event.key.keysym.sym == SDLK_r){
+        mesh.rotation.x += 0;
+        mesh.rotation.y += 0;
+        mesh.rotation.z += 0;
+    }
+
 
     break;
 
@@ -203,26 +209,17 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
 
         array_push(triangles_to_render, projected_triangle);
     }
-   /* for (int i = 0; i < N_points; i++)
-    {
-        vec3_t point = cube_points[i];
-
-        vec3_t rotated_cube = vec3_rotate_x(point, cube_rotation.x);
-        rotated_cube = vec3_rotate_y(rotated_cube, cube_rotation.y);
-        rotated_cube = vec3_rotate_z(rotated_cube, cube_rotation.z);
-
-
-        rotated_cube.z -= camera_pos.z;
-
-        /* Projecting poitns ////*
-        vec2_t projected_point = project(rotated_cube);
-
-
-        projected_points[i] = projected_point;
-
-
+        int num_triangles = array_length(triangles_to_render);
+    for (int i = 0; i < num_triangles; i++) {
+        for (int j = i; j < num_triangles; j++) {
+            if (triangles_to_render[i].avg_depth < triangles_to_render[j].avg_depth) {
+                // Swap the triangles positions in the array
+                triangle_t temp = triangles_to_render[i];
+                triangles_to_render[i] = triangles_to_render[j];
+                triangles_to_render[j] = temp;
+            }
+        }
     }
-    /*/
 }
 
 
@@ -266,7 +263,7 @@ int num_triangles = array_length(triangles_to_render);
             triangle.points[1].y,
             triangle.points[2].x,
             triangle.points[2].y,
-            BLUE
+            WHITE
         );
     }
         if (render_method == render_wire || render_method == RENDER_WIRE_VERRTEX || render_method == RENDER_FILL_TRIANGLE_WIRE){
