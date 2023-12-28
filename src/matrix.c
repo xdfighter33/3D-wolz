@@ -1,14 +1,14 @@
 #include "matrix.h"
 
-mat4_t matrix_identity(void){
+mat4_t matrix_identity(void) {
     // THE "1 of the MATRIX"
 
-    mat4_t m ={
-        {1, 0, 0, 0 },
-        { 0, 1, 0, 0 },
-        { 0, 0, 1, 0 },
-        { 0, 0, 0, 1 }
-    };
+    mat4_t m = {{
+        {1, 0, 0, 0},
+        {0, 1, 0, 0},
+        {0, 0 ,1, 0},
+        {0, 0, 0, 1}
+    }};
     return m;
 }
 
@@ -21,6 +21,17 @@ mat4_t mat4_scale_matrix(float sx, float sy, float sz){
 
     return m;
 
+
+
+}
+
+mat4_t mat4_translate_matrix(float tx, float ty, float tz) {
+    mat4_t m = matrix_identity();
+    m.m[0][3] = tx;
+    m.m[1][3] = ty;
+    m.m[2][3] = tz;
+
+    return m;
 }
 
 vec4_t matrix_multiplication_vec4(mat4_t m, vec4_t v){
