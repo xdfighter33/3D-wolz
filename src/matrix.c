@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include <math.h>
 
 mat4_t matrix_identity(void) {
     // THE "1 of the MATRIX"
@@ -33,6 +34,48 @@ mat4_t mat4_translate_matrix(float tx, float ty, float tz) {
 
     return m;
 }
+mat4_t mat4_rotation_matrix_x(float angle) {
+
+    float s = sin(angle);
+    float c = cos(angle);
+    mat4_t m = matrix_identity();
+    m.m[1][1] = c;
+    m.m[1][2] = s;
+    m.m[2][1] = -s;
+    m.m[2][2] = c;
+
+
+    return m;
+}
+
+mat4_t mat4_rotation_matrix_y(float angle) {
+
+    float s = sin(angle);
+    float c = cos(angle);
+    mat4_t m = matrix_identity();
+    m.m[0][0] = c;
+    m.m[0][2] = s;
+    m.m[2][0] = -s;
+    m.m[2][2] = c;
+
+
+    return m;
+}
+
+
+mat4_t mat4_rotation_matrix_z(float angle) {
+
+    float s = sin(angle);
+    float c = cos(angle);
+    mat4_t m = matrix_identity();
+    m.m[0][0] = c;
+    m.m[0][1] = -s;
+    m.m[1][0] = s;
+    m.m[1][1] = c;
+
+    return m;
+}
+
 
 vec4_t matrix_multiplication_vec4(mat4_t m, vec4_t v){
     vec4_t result;

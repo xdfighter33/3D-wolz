@@ -46,7 +46,7 @@ void setup(void){
         window_height
     );
     load_cube_mesh_data();
-    //load_obj_file_datas(ASSET_DIR "/cube.obj");
+    //load_obj_file_datas(ASSET_DIR "bunny.obj");
     // load_pyramid_mesh_data();
     }
 
@@ -122,16 +122,20 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
     triangles_to_render = NULL;
     ///* MESH ROTATION SPEED *\\\\\\\/
     //
-     //mesh.rotation.x += 0.01;
-     //mesh.rotation.y += 0.01;
-     //mesh.rotation.z += 0.02;
+     mesh.rotation.x += 0.01;
+     mesh.rotation.y += 0.01;
+     mesh.rotation.z += 0.02;
      //mesh.scale.x += 0.02;
      //mesh.scale.y += 0.01;
-     mesh.translation.x += 0.1;
+     mesh.translation.x = 0.01;
+     //mesh.translation.y = 1.0;
      mesh.translation.z = 5;
-
     mat4_t scale_matrix = mat4_scale_matrix(mesh.scale.x, mesh.scale.y, mesh.scale.z);
     mat4_t translate_matrix = mat4_translate_matrix(mesh.translation.x, mesh.translation.y, mesh.translation.z);
+    mat4_t rotation_matrix_x  = mat4_rotation_matrix_x(mesh.rotation.x);
+    mat4_t rotation_matrix_y  = mat4_rotation_matrix_y(mesh.rotation.y);
+    mat4_t rotation_matrix_z  = mat4_rotation_matrix_z(mesh.rotation.z);
+
     // Loop thhrough triangles faces of our mesh
     int num_faces = array_length(mesh.faces);
     for (int i = 0; i < num_faces; i++ ){
@@ -151,7 +155,11 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
 
 
 
-            transformed_vertex = matrix_multiplication_vec4(translate_matrix,transformed_vertex);
+
+            transformed_vertex = matrix_multiplication_vec4(rotation_matrix_x, transformed_vertex);
+            transformed_vertex = matrix_multiplication_vec4(rotation_matrix_y, transformed_vertex);
+            transformed_vertex = matrix_multiplication_vec4(rotation_matrix_z, transformed_vertex);
+            transformed_vertex = matrix_multiplication_vec4(translate_matrix, transformed_vertex);
                 //Translate away from the camera
 
 
@@ -237,7 +245,7 @@ int num_triangles = array_length(triangles_to_render);
             triangle.points[1].y,
             triangle.points[2].x,
             triangle.points[2].y,
-            ORANGE
+            triangle.color
         );
     }
     if (render_method == render_wire || render_method == RENDER_WIRE_VERRTEX || render_method == RENDER_FILL_TRIANGLE_WIRE){
