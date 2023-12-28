@@ -122,13 +122,16 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
     triangles_to_render = NULL;
     ///* MESH ROTATION SPEED *\\\\\\\/
     //
-     mesh.rotation.x += 0.01;
-     mesh.rotation.y += 0.01;
-     mesh.rotation.z += 0.02;
-     mesh.scale.x += 0.02;
-     mesh.scale.y += 0.01;
+     //mesh.rotation.x += 0.01;
+     //mesh.rotation.y += 0.01;
+     //mesh.rotation.z += 0.02;
+     //mesh.scale.x += 0.02;
+     //mesh.scale.y += 0.01;
+     mesh.translation.x += 0.1;
+     mesh.translation.z = 5;
 
     mat4_t scale_matrix = mat4_scale_matrix(mesh.scale.x, mesh.scale.y, mesh.scale.z);
+    mat4_t translate_matrix = mat4_translate_matrix(mesh.translation.x, mesh.translation.y, mesh.translation.z);
     // Loop thhrough triangles faces of our mesh
     int num_faces = array_length(mesh.faces);
     for (int i = 0; i < num_faces; i++ ){
@@ -146,11 +149,11 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
         for (int j = 0; j < 3; j++) {
             vec4_t transformed_vertex = vec3_to_vec4(face_vertices[j]);
 
-            matrix_multiplication_vec4(scale_matrix, transformed_vertex);
 
-            transformed_vertex = matrix_multiplication_vec4(scale_matrix,transformed_vertex);
+
+            transformed_vertex = matrix_multiplication_vec4(translate_matrix,transformed_vertex);
                 //Translate away from the camera
-            transformed_vertex.z += 5;
+
 
 
             transformed_vertices[j] = transformed_vertex;
