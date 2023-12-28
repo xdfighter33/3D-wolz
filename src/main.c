@@ -7,7 +7,7 @@
 #include "mesh.h"
 #include "array.h"
 #include "triangle.h"
-
+#include "matrix.h"
 /* Declare Variables */
 
 
@@ -45,8 +45,8 @@ void setup(void){
         window_width,
         window_height
     );
-    //load_cube_mesh_data();
-    load_obj_file_datas(ASSET_DIR "/cube.obj");
+    load_cube_mesh_data();
+    //load_obj_file_datas(ASSET_DIR "/cube.obj");
     // load_pyramid_mesh_data();
     }
 
@@ -125,7 +125,10 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
      mesh.rotation.x += 0.01;
      mesh.rotation.y += 0.01;
      mesh.rotation.z += 0.02;
+     mesh.scale.x += 0.02;
+     mesh.scale.y += 0.01;
 
+    mat4_t scale_matrix = mat4_scale_matrix(mesh.scale.x, mesh.scale.y, mesh.scale.z);
     // Loop thhrough triangles faces of our mesh
     int num_faces = array_length(mesh.faces);
     for (int i = 0; i < num_faces; i++ ){
@@ -137,21 +140,17 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
         face_vertices[2] = mesh.vertices[mesh_face.c - 1];
 
 
-        vec3_t transformed_vertices[3];
+        vec4_t transformed_vertices[3];
         // Loop through vertices and Transform
 
         for (int j = 0; j < 3; j++) {
-            vec3_t transformed_vertex = face_vertices[j];
+            vec4_t transformed_vertex = vec3_to_vec4(face_vertices[j]);
 
-            transformed_vertex = vec3_rotate_x(transformed_vertex, mesh.rotation.x);
-            transformed_vertex = vec3_rotate_y(transformed_vertex, mesh.rotation.y);
-            transformed_vertex = vec3_rotate_z(transformed_vertex, mesh.rotation.z);
+            matrix_multiplication_vec4(scale_matrix, transformed_vertex);
 
-
-            //Translate away from the camera
-
+            transformed_vertex = matrix_multiplication_vec4(scale_matrix,transformed_vertex);
+                //Translate away from the camera
             transformed_vertex.z += 5;
-            // transformed_vertex.x
 
 
             transformed_vertices[j] = transformed_vertex;
@@ -160,9 +159,9 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
 
         //BACKFACE CULLING ALGO  (CLOCK WISE)
         if (cull_method == CULL_BACKFACE) {
-            vec3_t vector_a = transformed_vertices[0];
-            vec3_t vector_b = transformed_vertices[1];
-            vec3_t vector_c = transformed_vertices[2];
+            vec3_t vector_a = vec4_to_vec3(transformed_vertices[0]);
+            vec3_t vector_b = vec4_to_vec3(transformed_vertices[1]);
+            vec3_t vector_c = vec4_to_vec3(transformed_vertices[2]);
 
             vec3_t vector_ab = vec_3_subtraction(vector_b, vector_a);
             vec3_t vector_ac = vec_3_subtraction(vector_c, vector_a);
@@ -185,11 +184,10 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
                 continue;
             }
         }
-        //triangle_t projected_triangle;
 
         vec2_t projected_point[3];
         for (int j = 0; j < 3; j++){
-             projected_point[j] = project(transformed_vertices[j]);
+             projected_point[j] = project(vec4_to_vec3(transformed_vertices[j]));
 
 
             projected_point[j].x += (window_width / 2);
@@ -204,8 +202,6 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
                 },
            .color = mesh_face.color
         };
-        //Save to Projected Triange
-        //triangles_to_render[i] = projected_triangle;
 
         array_push(triangles_to_render, projected_triangle);
     }
@@ -227,35 +223,10 @@ void render(void) {
 SDL_RenderClear(renderer);
 
 draw_grid();
-// draw_line(400, 300, 400, 0xFFFF00FF);
-//draw_rect(300, 200, 300, 150, 0xFFFF00FF);
-/*
-for (int i = 0; i < N_points; i++) {
-    vec2_t projected_point = projected_points[i];
-       /* vec2_t point1 = projected_points[i];
-        vec2_t point2 = projected_points[(i + 1) % N_points];
-
-        float start_x = point1.x + (window_width / 2);
-        float start_y = point1.y + (window_height / 2);
-        float line_length = (float)(point2.x - point1.x);
-/*
-    draw_rect(
-        projected_point.x + (window_width / 2),
-        projected_point.y + (window_height / 2),
-        4,
-        4,
-        0xFFFF00FF);
-}
-*/
 int num_triangles = array_length(triangles_to_render);
     for (int i = 0; i < num_triangles; i++) {
         triangle_t triangle = triangles_to_render[i];
     if(render_method == RENDER_FILL_TRIANGLE || render_method == RENDER_FILL_TRIANGLE_WIRE ){
-
-    
-        //draw_rect(triangle.points[0].x, triangle.points[0].y, 3, 3, 0x0000FF00);
-         //draw_rect(triangle.points[1].x, triangle.points[1].y, 3, 3, 0x0000FF00);
-        //draw_rect(triangle.points[2].x, triangle.points[2].y, 3, 3, 0x0000FF00);
         draw_filled_triangle(
             triangle.points[0].x,
             triangle.points[0].y,
@@ -263,10 +234,10 @@ int num_triangles = array_length(triangles_to_render);
             triangle.points[1].y,
             triangle.points[2].x,
             triangle.points[2].y,
-            WHITE
+            ORANGE
         );
     }
-        if (render_method == render_wire || render_method == RENDER_WIRE_VERRTEX || render_method == RENDER_FILL_TRIANGLE_WIRE){
+    if (render_method == render_wire || render_method == RENDER_WIRE_VERRTEX || render_method == RENDER_FILL_TRIANGLE_WIRE){
                 
         draw_triangle(
             triangle.points[0].x, triangle.points[0].y,
@@ -275,28 +246,14 @@ int num_triangles = array_length(triangles_to_render);
             WHITE
                 );
         }
-            if(render_method == RENDER_WIRE_VERRTEX){
+    if(render_method == RENDER_WIRE_VERRTEX){
              draw_rect(triangle.points[0].x , triangle.points[0].y, 6, 6, RED);
              draw_rect(triangle.points[1].x , triangle.points[1].y , 6, 6, RED);
              draw_rect(triangle.points[2].x ,  triangle.points[2].y , 6, 6, RED);
             }
 
-        //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, RED);
-        //draw_line(triangle.points[1].x, triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, RED);
-        //draw_line(triangle.points[2].x, triangle.points[2].y, triangle.points[0].x, triangle.points[0].y, RED);
-        //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[2].x, triangle.points[2].y, RED);
         
     }
-    
-        //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, 0xFFFF00FF);
-        //draw_line(triangle.points[1].x, triangle.points[1].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF00FF);
-        //draw_line(triangle.points[2].x, triangle.points[2].y, triangle.points[0].x, triangle.points[0].y, 0xFFFF00FF);
-        //draw_line(triangle.points[0].x, triangle.points[0].y, triangle.points[2].x, triangle.points[2].y, 0xFFFF00FF);
-
-    
-
-
-
 
     //FREE MEMORY (ARRAY)
     array_free(triangles_to_render);
@@ -304,8 +261,6 @@ int num_triangles = array_length(triangles_to_render);
     render_color_buffer();
     clear_color_buffer(0xFF000000);
 
-
-      
     SDL_RenderPresent(renderer);
 }
 
