@@ -11,6 +11,15 @@ typedef struct{
     float z;
 }vec3_t;
 
+typedef struct{
+    float x;
+    float y;
+    float z;
+    float w;
+}vec4_t;
+
+
+
 extern float vec_2_legth(vec2_t v);
 extern vec2_t vec_2_addition(vec2_t v, vec2_t x);
 extern vec2_t vec_2_subtraction(vec2_t v, vec2_t x);
@@ -30,7 +39,11 @@ extern float vec_3_dot(vec3_t a, vec3_t b);
 vec3_t vec3_rotate_x(vec3_t v, float angle);
 vec3_t vec3_rotate_y(vec3_t v, float angle);
 vec3_t vec3_rotate_z(vec3_t v, float angle);
+extern vec3_t vec4_to_vec3(vec4_t m);
 
 /* Add Vector Math */
 
 
+vec4_t vec3_to_vec4(vec3_t v);
+
+vec3_t vec4_to_vec3(vec4_t v);
