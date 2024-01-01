@@ -57,7 +57,7 @@ void setup(void){
 
 
     //load_cube_mesh_data();
-    load_obj_file_datas(ASSET_DIR"/f22.obj");
+    load_obj_file_datas(ASSET_DIR"/cube.obj");
      //load_pyramid_mesh_data();
     }
 
