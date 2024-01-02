@@ -61,7 +61,7 @@ void setup(void){
 
 
     load_cube_mesh_data();
-    //load_obj_file_datas(ASSET_DIR"/cube.obj");
+    //load_obj_file_datas(ASSET_DIR"/bear.obj");
      //load_pyramid_mesh_data();
     }
 
@@ -115,6 +115,9 @@ switch(event.type){
         mesh.rotation.x += 0;
         mesh.rotation.y += 0;
         mesh.rotation.z += 0;
+    }
+    if (event.key.keysym.sym == SDLK_l) {
+        mesh.rotation.x *= -1;
     }
 
 

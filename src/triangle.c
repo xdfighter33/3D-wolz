@@ -131,11 +131,11 @@ void draw_texture_triangle(
 	inv_slope_1 = 0;
 	inv_slope_2 = 0;
 
-	if (y1 - y0 != 0) inv_slope_1 = (float)(x2 - x1) / abs(y2 - y1);
+	if (y2 - y1 != 0) inv_slope_1 = (float)(x2 - x1) / abs(y2 - y1);
     if (y2 - y0 != 0) inv_slope_2 = (float)(x2 - x0) / abs(y2 - y0);
  		
-		if (y1 - y0 != 0) {
-       		for (int y = y0; y <= y1; y++) {
+		if (y2 - y1 != 0) {
+       		for (int y = y1; y <= y2; y++) {
             	int x_start = x1 + (y - y1) * inv_slope_1;
             	int x_end = x0 + (y - y0) * inv_slope_2;
 
@@ -145,7 +145,7 @@ void draw_texture_triangle(
 
             for (int x = x_start; x < x_end; x++) {
                 // Draw our pixel with a custom color
-                draw_pixel(x, y, RED);
+                draw_pixel(x, y, ORANGE);
             }
         }
     }
