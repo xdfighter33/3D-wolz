@@ -7,6 +7,7 @@
 #include "light.h"
 #include "mesh.h"
 #include "array.h"
+#include "texture.h"
 #include "triangle.h"
 #include "matrix.h"
 /* Declare Variables */
@@ -54,10 +55,13 @@ void setup(void){
     proj_matrix = mat4_make_perspecitve(fov,aspect,znear,zfar);
 
 
+    //mesh_texture = (uint32_t*)RED_BRICK;
+    texture_width = 64;
+    texture_height = 64;
 
 
-    //load_cube_mesh_data();
-    load_obj_file_datas(ASSET_DIR"/cube.obj");
+    load_cube_mesh_data();
+    //load_obj_file_datas(ASSET_DIR"/cube.obj");
      //load_pyramid_mesh_data();
     }
 
@@ -87,6 +91,12 @@ switch(event.type){
      //
      render_method = RENDER_FILL_TRIANGLE_WIRE;
      
+    }
+    if(event.key.keysym.sym == SDLK_5){
+        render_method = RENDER_TEXTURE_TRIANGLE;
+    }
+    if(event.key.keysym.sym == SDLK_6){
+        render_method = RENDER_TEXTURE_TRIANGLE_WIRE;
     }
     if(event.key.keysym.sym == SDLK_c){
      //
@@ -129,8 +139,8 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
     ///* MESH ROTATION SPEED *\\\\\\\/
     //
      mesh.rotation.x += 0.005;
-     mesh.rotation.y += 0.01;
-     mesh.rotation.z += 0.02;
+     //mesh.rotation.y += 0.01;
+     //mesh.rotation.z += 0.02;
      //mesh.scale.x += 0.002;
      //mesh.scale.y += 0.01;
      //mesh.translation.x = 0.01;
@@ -208,10 +218,12 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
         vec4_t projected_point[3];
         for (int j = 0; j < 3; j++){
              projected_point[j] = vec4_multi_mat4_perspect(proj_matrix,transformed_vertices[j]);
-
+            projected_point[j].y *= -1;
 
             projected_point[j].x *= (window_width / 2);
             projected_point[j].y *= (window_height / 2);
+
+
 
             projected_point[j].x += (window_width / 2);
             projected_point[j].y += (window_height / 2);
@@ -228,6 +240,11 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
                 projected_point[1].x, projected_point[1].y,
                 projected_point[2].x, projected_point[2].y
                 },
+            .tex_cords = {
+                {mesh_face.a_uv.u,mesh_face.a_uv.v,},
+                {mesh_face.b_uv.u,mesh_face.b_uv.v},
+                {mesh_face.c_uv.u,mesh_face.c_uv.v}
+            },
            .color = triangle_color,
            .avg_depth = avg_depth 
         };
@@ -266,7 +283,20 @@ int num_triangles = array_length(triangles_to_render);
             triangle.color
         );
     }
-    if (render_method == render_wire || render_method == RENDER_WIRE_VERRTEX || render_method == RENDER_FILL_TRIANGLE_WIRE){
+
+    if(render_method == RENDER_TEXTURE_TRIANGLE || render_method == RENDER_TEXTURE_TRIANGLE_WIRE){
+                        
+        draw_texture_triangle(
+            triangle.points[0].x, triangle.points[0].y, triangle.tex_cords[0].u,triangle.tex_cords[0].v,
+            triangle.points[1].x, triangle.points[1].y, triangle.tex_cords[1].u,triangle.tex_cords[1].v,
+            triangle.points[2].x, triangle.points[2].y, triangle.tex_cords[2].u,triangle.tex_cords[2].v,
+            mesh_texture
+        );
+        }
+    
+
+    
+    if (render_method == render_wire || render_method == RENDER_WIRE_VERRTEX || render_method == RENDER_FILL_TRIANGLE_WIRE || render_method == RENDER_TEXTURE_TRIANGLE_WIRE){
                 
         draw_triangle(
             triangle.points[0].x, triangle.points[0].y,
