@@ -29,7 +29,7 @@ include_directories(${SDL2_SOURCE_DIR}/include)
 
 
 # Add source to this project's executable.
-add_executable (Test "src/main.c" "src/mesh.h" "src/mesh.c" "src/display.h" "src/display.c" "src/vector.h" "src/vector.c" "src/triangle.h" "src/triangle.c" "src/array.h" "src/array.c" "src/matrix.h""src/matrix.c""src/light.h""src/light.c""src/texture.h" "src/texture.c") 
+add_executable (Test "src/main.c" "src/mesh.h" "src/mesh.c" "src/display.h" "src/display.c" "src/vector.h" "src/vector.c" "src/triangle.h" "src/triangle.c" "src/array.h" "src/array.c" "src/matrix.h""src/matrix.c""src/light.h""src/light.c""src/texture.h" "src/texture.c" "src/raindrop.h" "src/raindrop.c") 
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/asset DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
