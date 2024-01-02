@@ -24,7 +24,9 @@ enum render_method {
 	render_wire,
 	RENDER_WIRE_VERRTEX,
 	RENDER_FILL_TRIANGLE,
-	RENDER_FILL_TRIANGLE_WIRE
+	RENDER_FILL_TRIANGLE_WIRE,
+	RENDER_TEXTURE_TRIANGLE,
+	RENDER_TEXTURE_TRIANGLE_WIRE
 } render_method ;
 extern SDL_Window* window;
 extern SDL_Renderer* renderer;
