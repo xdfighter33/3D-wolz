@@ -55,7 +55,7 @@ void setup(void){
     proj_matrix = mat4_make_perspecitve(fov,aspect,znear,zfar);
 
 
-    //mesh_texture = (uint32_t*)RED_BRICK;
+    
     texture_width = 64;
     texture_height = 64;
 
@@ -63,6 +63,9 @@ void setup(void){
     load_cube_mesh_data();
     //load_obj_file_datas(ASSET_DIR"/bear.obj");
      //load_pyramid_mesh_data();
+
+
+     mesh_texture = (uint32_t*) RED_BRICK;
     }
 
 
@@ -142,8 +145,8 @@ if (time_to_wait > 0 && time_to_wait <= FRAME_TIME_TARGET){
     ///* MESH ROTATION SPEED *\\\\\\\/
     //
      mesh.rotation.x += 0.005;
-     //mesh.rotation.y += 0.01;
-     //mesh.rotation.z += 0.02;
+     mesh.rotation.y += 0.01;
+     mesh.rotation.z += 0.02;
      //mesh.scale.x += 0.002;
      //mesh.scale.y += 0.01;
      //mesh.translation.x = 0.01;

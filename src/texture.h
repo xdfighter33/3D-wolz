@@ -11,5 +11,3 @@ extern int texture_height;
 
 extern uint32_t* mesh_texture;
 extern const uint8_t RED_BRICK[];
-
-extern uint32_t* texture;
